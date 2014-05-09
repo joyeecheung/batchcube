@@ -39,7 +39,7 @@ def main():
     data = read_input(sys.stdin)
     # group by batch head
     for head, batch in groupby(data, itemgetter(0)):
-        e = [e.split() for head, e in batch]
+        e = [e.split() for head, e in batch]  # get useful fields
         for R in [B for B in C]:
             for region, group in groupby(e, itemgetter(*R)):
                 disdinct = len(set(record[-1] for record in group))
