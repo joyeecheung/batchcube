@@ -2,6 +2,7 @@
 
 from itertools import groupby
 from operator import itemgetter
+from collections import deque
 import sys
 
 uid = 6
@@ -39,11 +40,13 @@ def main():
     data = read_input(sys.stdin)
     # group by batch head
     for head, batch in groupby(data, itemgetter(0)):
-        e = [e.split() for head, e in batch]  # get useful fields
+        area = deque(e.split() for head, e in batch)  # get useful fields
         for R in [B for B in C]:
-            for region, group in groupby(e, itemgetter(*R)):
+            for region, group in groupby(area, itemgetter(*R)):
                 disdinct = len(set(record[-1] for record in group))
-                print "%s|%s\t%s" % (' '.join(R), ' '.join(region), disdinct)
+                print "%s|%s\t%s" % (' '.join([str(i) for i in R]),
+                                     ' '.join(region),
+                                     disdinct)
 
 if __name__ == "__main__":
     main()
