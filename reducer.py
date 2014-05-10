@@ -18,10 +18,10 @@ C = [(
     (country, state, city, topic, category, product)
 ), (
     (topic,),
-    (country, topic),
-    (country, state, topic),
-    (country, state, topic, category),
-    (country, state, topic, category, product)
+    (topic, country),
+    (topic, country, state),
+    (topic, category, country, state),
+    (topic, category, product, country, state)
 ), (
     (category,),
     (country, category),
@@ -29,6 +29,16 @@ C = [(
 ), (
     (product,),
 )]
+
+head_dict = {
+    2: 0,
+    5: 1,
+    6: 2,
+    7: 3
+}
+
+
+index_dict = ("2", "3", "4", "5", "6", "7", "1")
 
 
 def read_input(file):
@@ -41,10 +51,12 @@ def main():
     # group by batch head
     for head, batch in groupby(data, itemgetter(0)):
         area = deque(e.split() for head, e in batch)  # get useful fields
-        for R in [B for B in C]:
+        head_value = int(head.split('|')[0])
+        regions = C[head_dict[head_value]]
+        for R in regions:
             for region, group in groupby(area, itemgetter(*R)):
                 disdinct = len(set(record[-1] for record in group))
-                print "%s|%s\t%s" % (' '.join([str(i) for i in R]),
+                print "%s|%s\t%s" % (' '.join([index_dict[i] for i in R]),
                                      ' '.join(region),
                                      disdinct)
 
