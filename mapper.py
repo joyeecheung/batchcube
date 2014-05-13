@@ -37,12 +37,11 @@ def read_input(file):
 def main():
     data = read_input(sys.stdin)
     for e in data:
-        for head in (B[0] for B in C):
-            k = [e[i] for i in head]
-            # batch head | head value <TAB> uid, country, ..., product
-            # country | USA <TAB> 1, USA, ... , iPhone
+        for B in C:
+            head = B[0]
+            # batch_head | head_value <TAB> country, ..., product uid
             print "%s|%s\t%s" % (' '.join([str(i) for i in head]),
-                                 ' '.join(k),
+                                 ' '.join([e[i] for i in head]),
                                  ' '.join(e[i] for i in useful))
 if __name__ == "__main__":
     main()

@@ -18,10 +18,10 @@ C = [(
     (country, state, city, topic, category, product)
 ), (
     (topic,),
-    (topic, country),
-    (topic, country, state),
-    (topic, category, country, state),
-    (topic, category, product, country, state)
+    (country, topic),
+    (country, state, topic),
+    (country, state, topic, category),
+    (country, state, topic, category, product)
 ), (
     (category,),
     (country, category),
@@ -47,18 +47,28 @@ def read_input(file):
 
 
 def main():
+# f = open('maped')
+# data = [line for line in read_input(f)]
     data = read_input(sys.stdin)
     # group by batch head
-    for head, batch in groupby(data, itemgetter(0)):
-        area = deque(e.split() for head, e in batch)  # get useful fields
-        head_value = int(head.split('|')[0])
-        regions = C[head_dict[head_value]]
+    # e.g. head = "1|2" (country batch, country=2)
+    # group = [("1|2", "..... uid"), ("1|2", ".... uid") ....]
+    for head, group in groupby(data, itemgetter(0)):
+        which_batch = int(head.split('|')[0])
+        # regions = the batch scheme
+        regions = C[head_dict[which_batch]]
+        # area = [(country, state, ...., uid)...]
+        bottom = regions[-1]
+        raw_area = sorted([e for head, e in group], key=itemgetter(*bottom))
+        area = [e.split() for e in raw_area]  # get useful fields
         for R in regions:
             for region, group in groupby(area, itemgetter(*R)):
-                disdinct = len(set(record[-1] for record in group))
-                print "%s|%s\t%s" % (' '.join([index_dict[i] for i in R]),
-                                     ' '.join(region),
-                                     disdinct)
+                reach = len(set(record[-1] for record in group))
+                if type(region) is str:
+                    region_value = region
+                else:
+                    region_value = ' '.join(region)
+                print "%s|%s\t%s" % (' '.join([index_dict[i] for i in R]), region_value, reach) 
 
 if __name__ == "__main__":
     main()
