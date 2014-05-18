@@ -15,27 +15,21 @@ C = [(
     (country, state, city, topic, category, product)
 ), (
     (topic,),
-    (country, topic),
-    (country, state, topic),
-    (country, state, topic, category),
-    (country, state, topic, category, product)
+    (topic, country),
+    (topic, country, state),
+    (topic, category, country, state),
+    (topic, category, product, country, state)
 ), (
-    (category,),
-    (country, category),
-    (country, category, product)
+    (topic, category),
+    (topic, category, country),
+    (topic, category, product, country)
 ), (
-    (product,),
+    (topic, category, product),
 )]
 
+batch_number = len(C)
+
 useful = (country, state, city, topic, category, product, uid)
-
-
-heads = {
-    country: (country, topic),
-    topic: (topic, country),
-    category: (category,),
-    product: (product,)
-}
 
 
 def read_input(file):
@@ -46,10 +40,10 @@ def read_input(file):
 def main():
     data = read_input(sys.stdin)
     for e in data:
-        for head in heads:
+        for batch in range(batch_number):
             # batch_head | head_value <TAB> country, ..., product uid
-            print "%s|%s\t%s" % (str(head),
-                                 '+'.join([e[i] for i in heads[head]]),
+            print "%s|%s\t%s" % (str(batch),
+                                 ' '.join(e[i] for i in C[batch][0]),
                                  ' '.join(e[i] for i in useful))
 if __name__ == "__main__":
     main()
