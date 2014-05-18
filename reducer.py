@@ -44,8 +44,8 @@ index_dict = ("2", "3", "4", "5", "6", "7", "1")
 def read_input(file):
     for line in file:
         key, value = line.rstrip().split('\t')
-        head, head_value = key.split('|')
-        yield (head, head_value, value)
+        head = key.split('+')[0]
+        yield (head, value)
 
 
 def main():
@@ -56,12 +56,12 @@ def main():
     # e.g. head = "1|2" (country batch, country=2)
     # group = [("1|2", "..... uid"), ("1|2", ".... uid") ....]
     for head, group in groupby(data, itemgetter(0)):
-        which_batch = int(head)
+        which_batch = int(head.split('|')[0])
         # regions = the batch scheme
         regions = C[head_dict[which_batch]]
         # area = [(country, state, ...., uid)...]
         bottom = regions[-1]
-        raw_area = sorted([e for head, head_value, e in group], key=itemgetter(*bottom))
+        raw_area = sorted([e for head, e in group], key=itemgetter(*bottom))
         area = [e.split() for e in raw_area]  # get useful fields
         for R in regions:
             for region, group in groupby(area, itemgetter(*R)):
