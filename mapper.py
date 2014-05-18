@@ -26,7 +26,16 @@ C = [(
 ), (
     (product,),
 )]
+
 useful = (country, state, city, topic, category, product, uid)
+
+
+heads = {
+    country: (country, topic),
+    topic: (topic, country),
+    category: (category,),
+    product: (product,)
+}
 
 
 def read_input(file):
@@ -37,11 +46,10 @@ def read_input(file):
 def main():
     data = read_input(sys.stdin)
     for e in data:
-        for B in C:
-            head = B[0]
+        for head in heads:
             # batch_head | head_value <TAB> country, ..., product uid
-            print "%s|%s\t%s" % (' '.join([str(i) for i in head]),
-                                 ' '.join([e[i] for i in head]),
+            print "%s|%s\t%s" % (str(head),
+                                 '+'.join([e[i] for i in heads[head]]),
                                  ' '.join(e[i] for i in useful))
 if __name__ == "__main__":
     main()
